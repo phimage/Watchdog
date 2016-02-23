@@ -12,8 +12,10 @@ import Foundation
      
      @param strictMode boolean value that stops the execution whenever the threshold is reached.
      
+     @param logger optional callback to log message.
+     
      */
-    public init(threshold: Double = 0.4, strictMode: Bool = false) {
+    public init(threshold: Double = 0.4, strictMode: Bool = false, logger: ((String) -> Void)? = nil) {
         
         self.threshold = threshold
         self.pingThread = PingThread(threshold: threshold) {
@@ -24,7 +26,11 @@ import Foundation
             if strictMode {
                 assertionFailure()
             } else {
-                NSLog("%@", message)
+                if let logger = logger {
+                    logger(message)
+                } else {
+                    NSLog("%@", message)
+                }
             }
         }
         
